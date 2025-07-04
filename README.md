@@ -1,4 +1,4 @@
-# SureAct19
+# sureact19
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](#testing) [![NPM Version](https://img.shields.io/npm/v/sureact19.svg)](https://www.npmjs.com/package/sureact19) [![License](https://img.shields.io/npm/l/sureact19.svg)](./LICENSE)
 
