@@ -422,3 +422,4 @@ FodyWeavers.xsd
 # Ignore compiled JS and declaration files in src
 src/**/*.js
 src/**/*.d.ts
+src/**/*.js.map
