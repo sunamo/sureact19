@@ -25,4 +25,13 @@ module.exports = {
   moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  modulePathIgnorePatterns: ['<rootDir>/lib/'],
+  // Ensure Jest ignores JavaScript files and only uses TypeScript
+  moduleFileExtensions: ['ts', 'tsx', 'json'],
+  testPathIgnorePatterns: ['/node_modules/', '/lib/', '\\.js$', '\\.js\\.map$'],
+  // Explicitly exclude .js files from being resolved
+  modulePathIgnorePatterns: ['<rootDir>/lib/', '\\.js$'],
+  // Force Jest to resolve .ts files first
+  extensionsToTreatAsEsm: [],
+  resolver: undefined,
 };
