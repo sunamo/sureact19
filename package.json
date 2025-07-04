@@ -71,5 +71,8 @@
       "node ./.scripts/update-coverage-badge.js",
       "git add README.md"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
