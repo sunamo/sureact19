@@ -4,11 +4,15 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "barrels": "barrelsby --config .barrelsby.json",
+    "barrels:watch": "barrelsby --config .barrelsby.json --watch",
+    "prebuild": "pnpm run barrels",
     "build:watch": "tsc --project tsconfig.build.json --watch",
     "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:coverage:staged": "node ./.scripts/test-coverage-staged.js",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write src/**/*.{ts,tsx}",
@@ -63,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "babel-loader": "^10.0.0",
+    "barrelsby": "^2.8.1",
     "css-loader": "^7.1.2",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.2",
@@ -78,7 +83,7 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "pnpm test:coverage",
+      "pnpm run test:coverage:staged",
       "node ./.scripts/update-coverage-badge.js",
       "git add README.md"
     ]

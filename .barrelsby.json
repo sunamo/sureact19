@@ -1,0 +1,16 @@
+{
+  "directory": "./src",
+  "exclude": [
+    "__tests__",
+    ".*\\.test\\.ts$",
+    ".*\\.test\\.tsx$",
+    ".*\\.spec\\.ts$",
+    ".*\\.spec\\.tsx$",
+    "setupTests.ts"
+  ],
+  "delete": true,
+  "location": "top",
+  "structure": "flat",
+  "noHeader": true,
+  "exportDefault": false
+}
