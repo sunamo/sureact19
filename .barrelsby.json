@@ -6,11 +6,18 @@
     ".*\\.test\\.tsx$",
     ".*\\.spec\\.ts$",
     ".*\\.spec\\.tsx$",
-    "setupTests.ts"
+    "setupTests.ts",
+    "index.ts",
+    ".*\\.js$",
+    ".*\\.d\\.ts$",
+    ".*\\.js\\.map$"
   ],
   "delete": true,
   "location": "top",
   "structure": "flat",
   "noHeader": true,
-  "exportDefault": false
+  "exportDefault": false,
+  "singleQuotes": true,
+  "noSemicolon": false,
+  "mode": "modules"
 }

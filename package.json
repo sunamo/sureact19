@@ -4,8 +4,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "barrels": "barrelsby --config .barrelsby.json",
+    "barrels": "node ./.scripts/generate-barrels.js",
     "barrels:watch": "barrelsby --config .barrelsby.json --watch",
+    "barrels:generate": "barrelsby --config .barrelsby.json --delete",
+    "barrels:old": "barrelsby --config .barrelsby.json",
     "prebuild": "pnpm run barrels",
     "build:watch": "tsc --project tsconfig.build.json --watch",
     "build": "tsc --project tsconfig.build.json",
@@ -19,7 +21,7 @@
     "format:check": "prettier --check src/**/*.{ts,tsx}",
     "prepublishOnly": "npm run build && npm test",
     "prepare": "husky",
-    "semantic-release": "semantic-release"
+    "release": "semantic-release"
   },
   "keywords": [
     "react",
