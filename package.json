@@ -1,7 +1,8 @@
 {
   "name": "@sunamo/sureact19",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build:watch": "tsc --project tsconfig.build.json --watch",
     "build": "tsc --project tsconfig.build.json",
@@ -14,7 +15,7 @@
     "format:check": "prettier --check src/**/*.{ts,tsx}",
     "prepublishOnly": "npm run build && npm test",
     "prepare": "husky",
-    "release": "pnpm run semantic-release"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "react",
@@ -64,7 +65,13 @@
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.4.2",
-    "ts-jest": "^29.2.5"
+    "ts-jest": "^29.2.5",
+    "semantic-release": "^22.0.12",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
+    "@semantic-release/npm": "^11.0.2"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
