@@ -1,5 +1,5 @@
 {
-  "name": "@sunamo/sureact19",
+  "name": "sureact19",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "format:check": "prettier --check src/**/*.{ts,tsx}",
     "prepublishOnly": "npm run build && npm test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release": "pnpm run semantic-release"
   },
   "keywords": [
     "react",
