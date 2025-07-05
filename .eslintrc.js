@@ -9,12 +9,7 @@ module.exports = {
     },
   },
   plugins: ['@typescript-eslint', 'react', 'react-hooks'],
-  extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
   rules: {
     'react/react-in-jsx-scope': 'off', // Pro React 17+
     '@typescript-eslint/no-unused-vars': 'warn',
