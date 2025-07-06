@@ -1,39 +1,6 @@
 # sureact19
 
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) [![Coverage](https://img.shields.io/badge/coverage-83.33%25-brightgreen
-
-A modern React component library built with TypeScript and React 19.
-
-## Features
-
-- ✅ TypeScript support
-- ✅ React 19 compatible
-- ✅ Tree-shakable exports
-- ✅ Comprehensive test coverage
-- ✅ Modern build tooling
-- ✅ ESLint and Prettier configured
-
-## Installation
-
-```bash
-npm install sureact19
-# or
-yarn add sureact19
-# or
-pnpm add sureact19
-```
-
-## Usage
-
-### H1 Component
-
-A stylish heading component with optional gradient underline.
-
-```tsx
-import React from 'react';
-import { H1 } from 'sureact19';
-
-function App() {
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) [![Coverage](https://img.shields.io/badge/coverage-83.33%25-brightgreen) {
   return (
     <div>
       {/* Default H1 with gradient underline */}
