@@ -1,3 +1,11 @@
+## [1.0.6](https://github.com/sunamo/sureact19/compare/v1.0.5...v1.0.6) (2025-07-06)
+
+
+### Bug Fixes
+
+* Build before publish ([aa15eff](https://github.com/sunamo/sureact19/commit/aa15eff242c28e696becdcf680a9fc81ad4c16d5))
+* Updated package.json scripts ([ba92c21](https://github.com/sunamo/sureact19/commit/ba92c21445cca646d68c8915fbed5f5105dd3e82))
+
 ## [1.0.5](https://github.com/sunamo/sureact19/compare/v1.0.4...v1.0.5) (2025-07-06)
 
 

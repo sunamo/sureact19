@@ -1,6 +1,6 @@
 {
   "name": "@sunamo/sureact19",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -82,9 +82,7 @@
     "typescript": "^5.8.3"
   },
   "lint-staged": {
-    "*": [
-
-    ]
+    "*": []
   },
   "publishConfig": {
     "access": "public"
