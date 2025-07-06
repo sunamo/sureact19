@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/sunamo/sureact19/compare/v1.0.3...v1.0.4) (2025-07-06)
+
+
+### Bug Fixes
+
+* Removed temp file ([42795e4](https://github.com/sunamo/sureact19/commit/42795e45c20ed1e145209cd8ba67383e899a47ec))
+
 ## [1.0.3](https://github.com/sunamo/sureact19/compare/v1.0.2...v1.0.3) (2025-07-06)
 
 

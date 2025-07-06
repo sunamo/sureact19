@@ -2,7 +2,7 @@
 
 #musím to vložit do [] protože je tam i odkaz
 
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) ![Coverage](https://img.shields.io/badge/coverage-83.33%25-brightgreen)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) ![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)
 
 ### Setup
 
