@@ -25,7 +25,7 @@ const badgeUrl = `https://img.shields.io/badge/coverage-${coverage}%25-${color}`
 
 let readmeContent = fs.readFileSync(readmePath, 'utf8');
 readmeContent = readmeContent.replace(
-  /https:\/\/img\.shields\.io\/badge\/coverage-.*-.*/,
+  /https:\/\/img\.shields\.io\/badge\/coverage-[^)]+/,
   badgeUrl
 );
 
