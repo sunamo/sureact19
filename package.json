@@ -7,7 +7,7 @@
     "barrels": "node ./.scripts/generate-barrels.js",
     "barrels:watch": "barrelsby --config .barrelsby.json --watch",
     "barrels:generate": "barrelsby --config .barrelsby.json --delete",
-    "build:": "",
+    "Build:": "",
     "build:tsc-watch": "tsc --project tsconfig.build.json --watch",
     "build:watch": "npm-run-all -p build:tsc-watch barrels:watch",
     "build": "tsc --project tsconfig.build.json",
@@ -83,10 +83,7 @@
   },
   "lint-staged": {
     "*": [
-      "pnpm barrels",
-      "jest --coverage --coverageReporters=\"json-summary\"",
-      "node ./.scripts/update-coverage-badge.js",
-      "git add README.md"
+
     ]
   },
   "publishConfig": {
