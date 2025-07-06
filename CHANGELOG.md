@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/sunamo/sureact19/compare/v1.0.0...v1.0.1) (2025-07-06)
+
+
+### Bug Fixes
+
+* foundation2 ([2c3e342](https://github.com/sunamo/sureact19/commit/2c3e342244e648f88c45afc9fb5e9a20e5664185))
+
 # 1.0.0 (2025-07-06)
 
 
