@@ -21,7 +21,7 @@
     "format:check": "prettier --check src/**/*.{ts,tsx}",
     "prepublishOnly": "npm run build && npm test",
     "prepare": "husky",
-    "release": "semantic-release"
+    "release": "semantic-release && npm publish"
   },
   "keywords": [
     "react",

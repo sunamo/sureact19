@@ -1,2 +1,3 @@
 export * from './components/headers/H1';
-export * from './components/headers/H2';
+export * from './setupTests';
+export * from './ToDelete';
