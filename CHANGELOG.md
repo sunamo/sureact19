@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/sunamo/sureact19/compare/v1.0.2...v1.0.3) (2025-07-06)
+
+
+### Bug Fixes
+
+* update coverage ([8b06767](https://github.com/sunamo/sureact19/commit/8b067672f58c85a7d2d9928f60eb71fb07af0e2a))
+
 ## [1.0.2](https://github.com/sunamo/sureact19/compare/v1.0.1...v1.0.2) (2025-07-06)
 
 
