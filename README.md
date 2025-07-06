@@ -1,26 +1,8 @@
 # sureact19
 
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) [![Coverage](https://img.shields.io/badge/coverage-83.33%25-brightgreen) {
-  return (
-    <div>
-      {/* Default H1 with gradient underline */}
-      <H1>Welcome to SureAct19</H1>
+#musím to vložit do [] protože je tam i odkaz
 
-      {/* H1 without underline */}
-      <H1 notUnderlineColor>Clean Heading</H1>
-    </div>
-  );
-}
-```
-
-#### Props
-
-| Prop                | Type              | Default | Description                             |
-| ------------------- | ----------------- | ------- | --------------------------------------- |
-| `children`          | `React.ReactNode` | -       | Content to display in the heading       |
-| `notUnderlineColor` | `boolean`         | `false` | If true, removes the gradient underline |
-
-## Development
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) ![Coverage](https://img.shields.io/badge/coverage-83.33%25-brightgreen)
 
 ### Setup
 
