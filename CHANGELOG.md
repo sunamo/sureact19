@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/sunamo/sureact19/compare/v1.0.4...v1.0.5) (2025-07-06)
+
+
+### Bug Fixes
+
+* Clean up package.json scripts ([dd25c1c](https://github.com/sunamo/sureact19/commit/dd25c1cc0945fb29768955443beedbca62c6f4c8))
+
 ## [1.0.4](https://github.com/sunamo/sureact19/compare/v1.0.3...v1.0.4) (2025-07-06)
 
 
