@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/sunamo/sureact19/compare/v1.0.6...v1.0.7) (2025-07-07)
+
+
+### Bug Fixes
+
+* GH pipeline ([bf84822](https://github.com/sunamo/sureact19/commit/bf84822fa999d9b697299e2a7e0bdf545da75adb))
+
 ## [1.0.6](https://github.com/sunamo/sureact19/compare/v1.0.5...v1.0.6) (2025-07-06)
 
 
