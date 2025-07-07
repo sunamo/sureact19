@@ -1,4 +1,5 @@
 pnpm barrels
+pnpm lint
 pnpm build
 jest --coverage --coverageReporters="json-summary"
 node ./.scripts/update-coverage-badge.js
