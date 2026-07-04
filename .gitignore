@@ -431,3 +431,5 @@ src/**/*.js.map
 .env.development.local
 .env.test.local
 .env.production.local
+# Git worktree pracovni kopie (nikdy nesmi byt trackovane)
+*-claude*/

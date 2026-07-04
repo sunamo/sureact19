@@ -161,8 +161,10 @@ export function BackupSchedulePanel({
             const v = parseInt(e.target.value, 10);
             if (v > 0) onMaxBackupsToKeepChange(v);
           }}
-          inputProps={{ min: 1, step: 1, style: { width: 64, textAlign: "right" } }}
-          InputProps={{ endAdornment: <InputAdornment position="end">{l.maxBackupsUnit}</InputAdornment> }}
+          slotProps={{
+            htmlInput: { min: 1, step: 1, style: { width: 64, textAlign: "right" } },
+            input: { endAdornment: <InputAdornment position="end">{l.maxBackupsUnit}</InputAdornment> },
+          }}
           sx={{ width: 110 }}
         />
         {backupCount != null && (
@@ -201,8 +203,10 @@ export function BackupSchedulePanel({
               type="number"
               value={intervalInput}
               onChange={(e) => handleIntervalInputChange(e.target.value)}
-              inputProps={{ min: 1, step: 1, style: { width: 64, textAlign: "right" } }}
-              InputProps={{ endAdornment: <InputAdornment position="end">{l.intervalUnit}</InputAdornment> }}
+              slotProps={{
+                htmlInput: { min: 1, step: 1, style: { width: 64, textAlign: "right" } },
+                input: { endAdornment: <InputAdornment position="end">{l.intervalUnit}</InputAdornment> },
+              }}
               sx={{ width: 110 }}
             />
           )}
@@ -224,7 +228,7 @@ export function BackupSchedulePanel({
         </Box>
       )}
 
-      <Stack direction="row" gap={1} flexWrap="wrap">
+      <Stack direction="row" spacing={1} flexWrap="wrap">
         <Button
           size="small"
           variant="outlined"

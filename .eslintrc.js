@@ -12,6 +12,7 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
   rules: {
     'react/react-in-jsx-scope': 'off', // Pro React 17+
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
