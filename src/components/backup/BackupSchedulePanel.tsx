@@ -18,6 +18,22 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+function formatBackupName(name: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2})-(\d{2})-(\d{2})$/.exec(name);
+  if (!m) return name;
+  const [, y, mo, d, h, mi, s] = m;
+  const date = new Date(+y, +mo - 1, +d, +h, +mi, +s);
+  if (isNaN(date.getTime())) return name;
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
 function formatCountdown(ms: number): string {
   if (ms <= 0) return "nyní";
   const h = Math.floor(ms / 3_600_000);
@@ -219,7 +235,7 @@ export function BackupSchedulePanel({
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
           <CloudDoneIcon sx={{ fontSize: 14, opacity: 0.55 }} />
           <Typography variant="caption" color="text.secondary">
-            {l.latestOnDrive}: {latestDriveBackup.name}
+            {l.latestOnDrive}: {formatBackupName(latestDriveBackup.name)}
           </Typography>
         </Box>
       )}
