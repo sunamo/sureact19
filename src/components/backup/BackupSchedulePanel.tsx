@@ -53,11 +53,10 @@ export type BackupSchedulePanelProps = {
   onBackupIntervalChange: (minutes: number | null) => void;
   maxBackupsToKeep: number;
   onMaxBackupsToKeepChange: (v: number) => void;
-  // Automaticke obnoveni (pull z Drive)
+  // Automaticke obnoveni pri startu (pull z Drive). Periodicke obnoveni sdili interval se zalohou
+  // (backupIntervalMinutes) - proto zde uz neni samostatny restore interval.
   restoreOnStartup?: boolean;
   onRestoreOnStartupChange?: (v: boolean) => void;
-  restoreIntervalMinutes?: number | null;
-  onRestoreIntervalChange?: (minutes: number | null) => void;
   nextRestoreAt?: number;
   lastBackupAt?: string;
   nextBackupAt?: number;
@@ -90,10 +89,7 @@ export type BackupSchedulePanelProps = {
     maxBackups?: string;
     maxBackupsUnit?: string;
     onlineSuffix?: string;
-    restoreSchedule?: string;
     restoreOnStartup?: string;
-    restoreInterval?: string;
-    restoreCountdown?: (time: string) => string;
   };
 };
 
@@ -106,8 +102,6 @@ export function BackupSchedulePanel({
   onMaxBackupsToKeepChange,
   restoreOnStartup,
   onRestoreOnStartupChange,
-  restoreIntervalMinutes,
-  onRestoreIntervalChange,
   nextRestoreAt,
   lastBackupAt,
   nextBackupAt,
@@ -125,10 +119,6 @@ export function BackupSchedulePanel({
   labels = {},
 }: BackupSchedulePanelProps) {
   const [countdown, setCountdown] = useState<string>("");
-  const [restoreCountdown, setRestoreCountdown] = useState<string>("");
-  const [restoreIntervalInput, setRestoreIntervalInput] = useState<string>(
-    restoreIntervalMinutes != null ? String(restoreIntervalMinutes) : "5"
-  );
   const [intervalInput, setIntervalInput] = useState<string>(
     backupIntervalMinutes != null ? String(backupIntervalMinutes) : "60"
   );
@@ -147,58 +137,32 @@ export function BackupSchedulePanel({
     onExit: labels.onExit ?? "Při ukončení aplikace",
     interval: labels.interval ?? "V časovém rytmu",
     intervalUnit: labels.intervalUnit ?? "min",
-    countdown: labels.countdown ?? ((t: string) => `Příští záloha za ${t}`),
+    countdown: labels.countdown ?? ((t: string) => `Příští synchronizace za ${t}`),
     lastBackupNever: labels.lastBackupNever ?? "Nikdy",
     maxBackups: labels.maxBackups ?? "Max záloh",
     maxBackupsUnit: labels.maxBackupsUnit ?? "ks",
     onlineSuffix: labels.onlineSuffix,
     openOnDrive: labels.openOnDrive,
-    restoreSchedule: labels.restoreSchedule ?? "Automatické obnovení",
-    restoreOnStartupLabel: labels.restoreOnStartup ?? "Při otevření aplikace",
-    restoreInterval: labels.restoreInterval ?? "V časovém rytmu",
-    restoreCountdown: labels.restoreCountdown ?? ((t: string) => `Příští obnovení za ${t}`),
+    restoreOnStartupLabel: labels.restoreOnStartup ?? "Obnovit při otevření aplikace",
   };
 
+  // Zaloha a obnoveni sdili jeden interval (jen fazove posunute o pul intervalu, viz
+  // applyRestoreSchedule v main.ts) - proto se v UI ukazuji jako jedina sjednocena
+  // synchronizace (nejblizsi z obou), ne jako 2 samostatne odpocty.
   useEffect(() => {
-    if (backupIntervalMinutes == null) { setCountdown(""); return; }
-    if (nextBackupAt == null) { setCountdown(""); return; }
+    const next = [
+      backupIntervalMinutes != null ? nextBackupAt : null,
+      nextRestoreAt,
+    ].filter((v): v is number => v != null).sort((a, b) => a - b)[0];
+    if (next == null) { setCountdown(""); return; }
     const tick = () => {
-      const remaining = nextBackupAt - Date.now();
+      const remaining = next - Date.now();
       setCountdown(remaining > 0 ? l.countdown(formatCountdown(remaining)) : "");
     };
     tick();
     const id = setInterval(tick, 1_000);
     return () => clearInterval(id);
-  }, [backupIntervalMinutes, nextBackupAt]);
-
-  useEffect(() => {
-    if (restoreIntervalMinutes == null) { setRestoreCountdown(""); return; }
-    if (nextRestoreAt == null) { setRestoreCountdown(""); return; }
-    const tick = () => {
-      const remaining = nextRestoreAt - Date.now();
-      setRestoreCountdown(remaining > 0 ? l.restoreCountdown(formatCountdown(remaining)) : "");
-    };
-    tick();
-    const id = setInterval(tick, 1_000);
-    return () => clearInterval(id);
-  }, [restoreIntervalMinutes, nextRestoreAt]);
-
-  const handleRestoreIntervalToggle = (checked: boolean) => {
-    if (!onRestoreIntervalChange) return;
-    if (checked) {
-      const mins = Math.max(1, parseInt(restoreIntervalInput, 10) || 5);
-      setRestoreIntervalInput(String(mins));
-      onRestoreIntervalChange(mins);
-    } else {
-      onRestoreIntervalChange(null);
-    }
-  };
-
-  const handleRestoreIntervalInputChange = (val: string) => {
-    setRestoreIntervalInput(val);
-    const mins = parseInt(val, 10);
-    if (mins > 0) onRestoreIntervalChange?.(mins);
-  };
+  }, [backupIntervalMinutes, nextBackupAt, nextRestoreAt]);
 
   const handleIntervalToggle = (checked: boolean) => {
     if (checked) {
@@ -250,6 +214,14 @@ export function BackupSchedulePanel({
           label={<Typography variant="body2">{l.onExit}</Typography>}
           sx={{ m: 0 }}
         />
+
+        {onRestoreOnStartupChange && (
+          <FormControlLabel
+            control={<Checkbox checked={restoreOnStartup ?? true} onChange={(e) => onRestoreOnStartupChange(e.target.checked)} size="small" />}
+            label={<Typography variant="body2">{l.restoreOnStartupLabel}</Typography>}
+            sx={{ m: 0 }}
+          />
+        )}
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
           <FormControlLabel
@@ -343,52 +315,6 @@ export function BackupSchedulePanel({
           <Alert severity="error" sx={{ py: 0.5 }}>{statusMessage.text}</Alert>
         )}
       </Stack>
-
-      {onRestoreOnStartupChange && onRestoreIntervalChange && (
-        <Stack spacing={1.5}>
-          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>
-            {l.restoreSchedule}
-          </Typography>
-
-          <FormControlLabel
-            control={<Checkbox checked={restoreOnStartup ?? true} onChange={(e) => onRestoreOnStartupChange(e.target.checked)} size="small" />}
-            label={<Typography variant="body2">{l.restoreOnStartupLabel}</Typography>}
-            sx={{ m: 0 }}
-          />
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={restoreIntervalMinutes != null}
-                  onChange={(e) => handleRestoreIntervalToggle(e.target.checked)}
-                  size="small"
-                />
-              }
-              label={<Typography variant="body2">{l.restoreInterval}</Typography>}
-              sx={{ m: 0 }}
-            />
-            {restoreIntervalMinutes != null && (
-              <TextField
-                size="small"
-                type="number"
-                value={restoreIntervalInput}
-                onChange={(e) => handleRestoreIntervalInputChange(e.target.value)}
-                inputProps={{ min: 1, step: 1, style: { width: 64, textAlign: "right" } }}
-                InputProps={{ endAdornment: <InputAdornment position="end">{l.intervalUnit}</InputAdornment> }}
-                sx={{ width: 110 }}
-              />
-            )}
-          </Box>
-
-          {restoreCountdown && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-              <TimerIcon sx={{ fontSize: 14, opacity: 0.6 }} />
-              <Typography variant="caption" color="text.secondary">{restoreCountdown}</Typography>
-            </Box>
-          )}
-        </Stack>
-      )}
     </>
   );
 }
