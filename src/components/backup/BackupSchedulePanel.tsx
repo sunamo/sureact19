@@ -18,6 +18,22 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
+function formatBackupName(name: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2})-(\d{2})-(\d{2})$/.exec(name);
+  if (!m) return name;
+  const [, y, mo, d, h, mi, s] = m;
+  const date = new Date(+y, +mo - 1, +d, +h, +mi, +s);
+  if (isNaN(date.getTime())) return name;
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
 function formatCountdown(ms: number): string {
   if (ms <= 0) return "nyní";
   const h = Math.floor(ms / 3_600_000);
@@ -37,6 +53,11 @@ export type BackupSchedulePanelProps = {
   onBackupIntervalChange: (minutes: number | null) => void;
   maxBackupsToKeep: number;
   onMaxBackupsToKeepChange: (v: number) => void;
+  // Automaticke obnoveni pri startu (pull z Drive). Periodicke obnoveni sdili interval se zalohou
+  // (backupIntervalMinutes) - proto zde uz neni samostatny restore interval.
+  restoreOnStartup?: boolean;
+  onRestoreOnStartupChange?: (v: boolean) => void;
+  nextRestoreAt?: number;
   lastBackupAt?: string;
   nextBackupAt?: number;
   latestDriveBackup?: DriveBackupEntry | null;
@@ -68,6 +89,7 @@ export type BackupSchedulePanelProps = {
     maxBackups?: string;
     maxBackupsUnit?: string;
     onlineSuffix?: string;
+    restoreOnStartup?: string;
   };
 };
 
@@ -78,6 +100,9 @@ export function BackupSchedulePanel({
   onBackupIntervalChange,
   maxBackupsToKeep,
   onMaxBackupsToKeepChange,
+  restoreOnStartup,
+  onRestoreOnStartupChange,
+  nextRestoreAt,
   lastBackupAt,
   nextBackupAt,
   latestDriveBackup,
@@ -112,25 +137,32 @@ export function BackupSchedulePanel({
     onExit: labels.onExit ?? "Při ukončení aplikace",
     interval: labels.interval ?? "V časovém rytmu",
     intervalUnit: labels.intervalUnit ?? "min",
-    countdown: labels.countdown ?? ((t: string) => `Příští záloha za ${t}`),
+    countdown: labels.countdown ?? ((t: string) => `Příští synchronizace za ${t}`),
     lastBackupNever: labels.lastBackupNever ?? "Nikdy",
     maxBackups: labels.maxBackups ?? "Max záloh",
     maxBackupsUnit: labels.maxBackupsUnit ?? "ks",
     onlineSuffix: labels.onlineSuffix,
     openOnDrive: labels.openOnDrive,
+    restoreOnStartupLabel: labels.restoreOnStartup ?? "Obnovit při otevření aplikace",
   };
 
+  // Zaloha a obnoveni sdili jeden interval (jen fazove posunute o pul intervalu, viz
+  // applyRestoreSchedule v main.ts) - proto se v UI ukazuji jako jedina sjednocena
+  // synchronizace (nejblizsi z obou), ne jako 2 samostatne odpocty.
   useEffect(() => {
-    if (backupIntervalMinutes == null) { setCountdown(""); return; }
-    if (nextBackupAt == null) { setCountdown(""); return; }
+    const next = [
+      backupIntervalMinutes != null ? nextBackupAt : null,
+      nextRestoreAt,
+    ].filter((v): v is number => v != null).sort((a, b) => a - b)[0];
+    if (next == null) { setCountdown(""); return; }
     const tick = () => {
-      const remaining = nextBackupAt - Date.now();
+      const remaining = next - Date.now();
       setCountdown(remaining > 0 ? l.countdown(formatCountdown(remaining)) : "");
     };
     tick();
     const id = setInterval(tick, 1_000);
     return () => clearInterval(id);
-  }, [backupIntervalMinutes, nextBackupAt]);
+  }, [backupIntervalMinutes, nextBackupAt, nextRestoreAt]);
 
   const handleIntervalToggle = (checked: boolean) => {
     if (checked) {
@@ -185,6 +217,14 @@ export function BackupSchedulePanel({
           sx={{ m: 0 }}
         />
 
+        {onRestoreOnStartupChange && (
+          <FormControlLabel
+            control={<Checkbox checked={restoreOnStartup ?? true} onChange={(e) => onRestoreOnStartupChange(e.target.checked)} size="small" />}
+            label={<Typography variant="body2">{l.restoreOnStartupLabel}</Typography>}
+            sx={{ m: 0 }}
+          />
+        )}
+
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
           <FormControlLabel
             control={
@@ -223,7 +263,7 @@ export function BackupSchedulePanel({
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
           <CloudDoneIcon sx={{ fontSize: 14, opacity: 0.55 }} />
           <Typography variant="caption" color="text.secondary">
-            {l.latestOnDrive}: {latestDriveBackup.name}
+            {l.latestOnDrive}: {formatBackupName(latestDriveBackup.name)}
           </Typography>
         </Box>
       )}
