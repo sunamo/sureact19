@@ -146,9 +146,8 @@ export function BackupSchedulePanel({
     restoreOnStartupLabel: labels.restoreOnStartup ?? "Obnovit při otevření aplikace",
   };
 
-  // Zaloha a obnoveni sdili jeden interval (jen fazove posunute o pul intervalu, viz
-  // applyRestoreSchedule v main.ts) - proto se v UI ukazuji jako jedina sjednocena
-  // synchronizace (nejblizsi z obou), ne jako 2 samostatne odpocty.
+  // nextBackupAt a nextRestoreAt jsou dnes vzdy stejna hodnota - jde o jeden sjednoceny sync
+  // cyklus (pull+push dohromady, viz performSync v main.ts), zadne dva nezavisle rytmy.
   useEffect(() => {
     const next = [
       backupIntervalMinutes != null ? nextBackupAt : null,
