@@ -46,13 +46,19 @@ function formatCountdown(ms: number): string {
 
 export type DriveBackupEntry = { id: string; name: string };
 
+export type BackupRetentionSettings = {
+  maxToday: number;
+  retentionDays: number;
+  maxPerDay: number;
+};
+
 export type BackupSchedulePanelProps = {
   backupOnExit: boolean;
   onBackupOnExitChange: (v: boolean) => void;
   backupIntervalMinutes: number | null;
   onBackupIntervalChange: (minutes: number | null) => void;
-  maxBackupsToKeep: number;
-  onMaxBackupsToKeepChange: (v: number) => void;
+  retention: BackupRetentionSettings;
+  onRetentionChange: (v: BackupRetentionSettings) => void;
   // Automaticke obnoveni pri startu (pull z Drive). Periodicke obnoveni sdili interval se zalohou
   // (backupIntervalMinutes) - proto zde uz neni samostatny restore interval.
   restoreOnStartup?: boolean;
@@ -86,8 +92,11 @@ export type BackupSchedulePanelProps = {
     lastBackupNever?: string;
     openOnDrive?: string;
     deleteAll?: string;
-    maxBackups?: string;
-    maxBackupsUnit?: string;
+    maxBackupsToday?: string;
+    backupRetentionDays?: string;
+    maxBackupsPerDay?: string;
+    unitPieces?: string;
+    unitDays?: string;
     onlineSuffix?: string;
     restoreOnStartup?: string;
   };
@@ -98,8 +107,8 @@ export function BackupSchedulePanel({
   onBackupOnExitChange,
   backupIntervalMinutes,
   onBackupIntervalChange,
-  maxBackupsToKeep,
-  onMaxBackupsToKeepChange,
+  retention,
+  onRetentionChange,
   restoreOnStartup,
   onRestoreOnStartupChange,
   nextRestoreAt,
@@ -122,9 +131,11 @@ export function BackupSchedulePanel({
   const [intervalInput, setIntervalInput] = useState<string>(
     backupIntervalMinutes != null ? String(backupIntervalMinutes) : "60"
   );
-  const [maxBackupsInput, setMaxBackupsInput] = useState<string>(
-    maxBackupsToKeep != null ? String(maxBackupsToKeep) : "5"
-  );
+  const [retentionInput, setRetentionInput] = useState<Record<keyof BackupRetentionSettings, string>>({
+    maxToday: String(retention.maxToday),
+    retentionDays: String(retention.retentionDays),
+    maxPerDay: String(retention.maxPerDay),
+  });
 
   const l = {
     backupNow: labels.backupNow ?? "Zálohovat nyní",
@@ -139,8 +150,11 @@ export function BackupSchedulePanel({
     intervalUnit: labels.intervalUnit ?? "min",
     countdown: labels.countdown ?? ((t: string) => `Příští synchronizace za ${t}`),
     lastBackupNever: labels.lastBackupNever ?? "Nikdy",
-    maxBackups: labels.maxBackups ?? "Max záloh",
-    maxBackupsUnit: labels.maxBackupsUnit ?? "ks",
+    maxBackupsToday: labels.maxBackupsToday ?? "Max záloh z dneška",
+    backupRetentionDays: labels.backupRetentionDays ?? "Držet zálohy za posledních",
+    maxBackupsPerDay: labels.maxBackupsPerDay ?? "Max záloh z každého dřívějšího dne",
+    unitPieces: labels.unitPieces ?? "ks",
+    unitDays: labels.unitDays ?? "dnů",
     onlineSuffix: labels.onlineSuffix,
     openOnDrive: labels.openOnDrive,
     restoreOnStartupLabel: labels.restoreOnStartup ?? "Obnovit při otevření aplikace",
@@ -179,31 +193,47 @@ export function BackupSchedulePanel({
     if (mins > 0) onBackupIntervalChange(mins);
   };
 
+  const handleRetentionChange = (key: keyof BackupRetentionSettings, val: string) => {
+    setRetentionInput((prev) => ({ ...prev, [key]: val }));
+    const n = parseInt(val, 10);
+    const min = key === "retentionDays" ? 0 : 1;
+    if (Number.isFinite(n) && n >= min) onRetentionChange({ ...retention, [key]: n });
+  };
+
+  // Kolik zaloh smi celkem zustat - podle nej se cervene zvyrazni pocet zaloh na Drive.
+  const maxTotalBackups = retention.maxToday + retention.retentionDays * retention.maxPerDay;
+
+  const retentionRows: { key: keyof BackupRetentionSettings; label: string; unit: string; min: number }[] = [
+    { key: "maxToday", label: l.maxBackupsToday, unit: l.unitPieces, min: 1 },
+    { key: "retentionDays", label: l.backupRetentionDays, unit: l.unitDays, min: 0 },
+    { key: "maxPerDay", label: l.maxBackupsPerDay, unit: l.unitPieces, min: 1 },
+  ];
+
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-        <Typography variant="body2">{l.maxBackups}</Typography>
-        <TextField
-          size="small"
-          type="number"
-          value={maxBackupsInput}
-          onChange={(e) => {
-            setMaxBackupsInput(e.target.value);
-            const v = parseInt(e.target.value, 10);
-            if (v > 0) onMaxBackupsToKeepChange(v);
-          }}
-          slotProps={{
-            htmlInput: { min: 1, step: 1, style: { width: 64, textAlign: "right" } },
-            input: { endAdornment: <InputAdornment position="end">{l.maxBackupsUnit}</InputAdornment> },
-          }}
-          sx={{ width: 110 }}
-        />
-        {backupCount != null && (
-          <Typography variant="caption" color={maxBackupsToKeep != null && backupCount > maxBackupsToKeep ? "error" : "text.secondary"}>
-            {l.onlineSuffix ? `${l.onlineSuffix} ${backupCount} ${l.maxBackupsUnit}` : `Online: ${backupCount} ${l.maxBackupsUnit}`}
-          </Typography>
-        )}
-      </Box>
+      <Stack spacing={1}>
+        {retentionRows.map((row) => (
+          <Box key={row.key} sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+            <Typography variant="body2" sx={{ minWidth: 220 }}>{row.label}</Typography>
+            <TextField
+              size="small"
+              type="number"
+              value={retentionInput[row.key]}
+              onChange={(e) => handleRetentionChange(row.key, e.target.value)}
+              slotProps={{
+                htmlInput: { min: row.min, step: 1, style: { width: 64, textAlign: "right" } },
+                input: { endAdornment: <InputAdornment position="end">{row.unit}</InputAdornment> },
+              }}
+              sx={{ width: 110 }}
+            />
+            {row.key === "maxToday" && backupCount != null && (
+              <Typography variant="caption" color={backupCount > maxTotalBackups ? "error" : "text.secondary"}>
+                {l.onlineSuffix ? `${l.onlineSuffix} ${backupCount} ${l.unitPieces}` : `Online: ${backupCount} ${l.unitPieces}`}
+              </Typography>
+            )}
+          </Box>
+        ))}
+      </Stack>
 
       <Stack spacing={1.5}>
         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>
