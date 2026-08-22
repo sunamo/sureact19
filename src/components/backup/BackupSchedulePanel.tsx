@@ -83,7 +83,7 @@ export type BackupSchedulePanelProps = {
   isDeletingBackup?: boolean;
   backingUp?: boolean;
   canRestore?: boolean;
-  statusMessage?: { type: "success" | "error"; text: string } | null;
+  statusMessage?: { type: "success" | "error" | "info"; text: string } | null;
   labels?: {
     backupNow?: string;
     backingUp?: string;
@@ -364,6 +364,9 @@ export function BackupSchedulePanel({
         )}
         {statusMessage?.type === "error" && (
           <Alert severity="error" sx={{ py: 0.5 }}>{statusMessage.text}</Alert>
+        )}
+        {statusMessage?.type === "info" && (
+          <Alert severity="info" sx={{ py: 0.5 }}>{statusMessage.text}</Alert>
         )}
       </Stack>
     </>
