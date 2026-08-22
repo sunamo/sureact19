@@ -52,9 +52,16 @@ export type BackupRetentionSettings = {
   maxPerDay: number;
 };
 
+function AttentionDot() {
+  return <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "error.main", flexShrink: 0 }} />;
+}
+
 export type BackupSchedulePanelProps = {
   backupOnExit: boolean;
   onBackupOnExitChange: (v: boolean) => void;
+  // Appka muze zalohu pri ukonceni vynutit jako trvale zapnutou (needitovatelnou) - checkbox se pak
+  // vykresli jako checked+disabled bez ohledu na hodnotu backupOnExit.
+  backupOnExitLocked?: boolean;
   backupIntervalMinutes: number | null;
   onBackupIntervalChange: (minutes: number | null) => void;
   retention: BackupRetentionSettings;
@@ -105,6 +112,7 @@ export type BackupSchedulePanelProps = {
 export function BackupSchedulePanel({
   backupOnExit,
   onBackupOnExitChange,
+  backupOnExitLocked = false,
   backupIntervalMinutes,
   onBackupIntervalChange,
   retention,
@@ -241,17 +249,27 @@ export function BackupSchedulePanel({
         </Typography>
 
         <FormControlLabel
-          control={<Checkbox checked={backupOnExit} onChange={(e) => onBackupOnExitChange(e.target.checked)} size="small" />}
+          control={
+            <Checkbox
+              checked={backupOnExitLocked ? true : backupOnExit}
+              disabled={backupOnExitLocked}
+              onChange={(e) => onBackupOnExitChange(e.target.checked)}
+              size="small"
+            />
+          }
           label={<Typography variant="body2">{l.onExit}</Typography>}
           sx={{ m: 0 }}
         />
 
         {onRestoreOnStartupChange && (
-          <FormControlLabel
-            control={<Checkbox checked={restoreOnStartup ?? true} onChange={(e) => onRestoreOnStartupChange(e.target.checked)} size="small" />}
-            label={<Typography variant="body2">{l.restoreOnStartupLabel}</Typography>}
-            sx={{ m: 0 }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+            <FormControlLabel
+              control={<Checkbox checked={restoreOnStartup ?? true} onChange={(e) => onRestoreOnStartupChange(e.target.checked)} size="small" />}
+              label={<Typography variant="body2">{l.restoreOnStartupLabel}</Typography>}
+              sx={{ m: 0 }}
+            />
+            {!(restoreOnStartup ?? true) && <AttentionDot />}
+          </Box>
         )}
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
@@ -297,7 +315,7 @@ export function BackupSchedulePanel({
         </Box>
       )}
 
-      <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
         <Button
           size="small"
           variant="outlined"
