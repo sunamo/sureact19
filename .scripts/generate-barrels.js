@@ -45,7 +45,8 @@ function generateBarrels() {
         !dirent.name.includes('.d.ts') &&
         !dirent.name.includes('.test.') &&
         !dirent.name.includes('.spec.') &&
-        dirent.name !== 'index.ts'
+        dirent.name !== 'index.ts' &&
+        dirent.name !== 'setupTests.ts'
     )
     .map(dirent => dirent.name.replace(/\.(ts|tsx)$/, ''));
 
