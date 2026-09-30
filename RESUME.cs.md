@@ -9,3 +9,7 @@ generated_date: 2026-09-30
 ## Description
 
 A React component library with TypeScript support.
+
+## Původ zdrojáků
+
+Staženo z GitHubu: **ne** — podle remote a metadat repa nejde o zdrojáky stažené z GitHubu.
