@@ -1,5 +1,5 @@
 ---
-schema_version: 4
+schema_version: 5
 type: library
 file_count: 29
 delete_recommendation_percent: 15
@@ -7,6 +7,9 @@ generated_date: 2026-09-30
 generated_time: 16:44:08
 github_origin: no
 github_source_url: 
+first_commit_date: 2025-06-16
+last_commit_date: 2026-08-22
+commit_count: 59
 ---
 
 ## Description
@@ -26,3 +29,11 @@ Doporučení ke smazání: **15 %** — malá knihovna se dvěma komponentami a 
 - Jen 2 skutečné komponenty (BackupSchedulePanel, H1) a nízké pokrytí testy.
 - Je submodulem v `english-line-by-line` (viz jeho `.gitmodules`), takže smazání by rozbilo tu appku.
 - Poslední obsahová změna 2026-08-22, repo je udržované.
+
+## Historie commitů
+
+- První commit: 2025-06-16
+- Poslední commit: 2026-08-22
+- Celkem commitů: 59
+
+- Počítá se bez commitů, které jen generovaly RESUME.cs.md nebo README.md.
