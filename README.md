@@ -1,5 +1,9 @@
 # sureact19
 
+## Short description
+
+NPM knihovna `@sunamo/sureact19` s React 19 komponentami v TypeScriptu. Zatím obsahuje jen několik komponent (panel plánu záloh `BackupSchedulePanel`, nadpis `H1`), zbytek tvoří infrastruktura knihovny: testy, semantic-release, husky, barrel generátor a GitHub workflow. Poslední obsahová změna je z roku 2026-08.
+
 [comment]: <> (musím to vložit do [] protože je tam i odkaz)
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) ![Coverage](https://img.shields.io/badge/coverage-17.74%25-red)
