@@ -2,8 +2,7 @@
 
 ## Short description
 
-Knihovna pro React 19 psaná v TypeScriptu s buildem, testy v Jestu a automatickým generováním barrel souborů. Slouží jako sdílený npm balíček pro vlastní appky.
-
+NPM knihovna `@sunamo/sureact19` s React 19 komponentami v TypeScriptu. Zatím obsahuje jen několik komponent (panel plánu záloh `BackupSchedulePanel`, nadpis `H1`), zbytek tvoří infrastruktura knihovny: testy, semantic-release, husky, barrel generátor a GitHub workflow. Poslední obsahová změna je z roku 2026-08.
 
 [comment]: <> (musím to vložit do [] protože je tam i odkaz)
 
