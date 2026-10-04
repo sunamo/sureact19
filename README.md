@@ -1,5 +1,10 @@
 # sureact19
 
+## Short description
+
+Knihovna pro React 19 psaná v TypeScriptu s buildem, testy v Jestu a automatickým generováním barrel souborů. Slouží jako sdílený npm balíček pro vlastní appky.
+
+
 [comment]: <> (musím to vložit do [] protože je tam i odkaz)
 
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-pending-yellow)](https://github.com/actions) [![Tests](https://img.shields.io/badge/tests-passing-green)](#testing) ![Coverage](https://img.shields.io/badge/coverage-17.74%25-red)
