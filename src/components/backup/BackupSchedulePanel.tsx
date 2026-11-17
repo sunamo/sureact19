@@ -62,6 +62,9 @@ export type BackupSchedulePanelProps = {
   // Appka muze zalohu pri ukonceni vynutit jako trvale zapnutou (needitovatelnou) - checkbox se pak
   // vykresli jako checked+disabled bez ohledu na hodnotu backupOnExit.
   backupOnExitLocked?: boolean;
+  // Pripominka synchronizace pri odchodu z appky (info alert / varovani) - volitelne, jen kdyz appka umi.
+  exitSyncAlert?: boolean;
+  onExitSyncAlertChange?: (v: boolean) => void;
   backupIntervalMinutes: number | null;
   onBackupIntervalChange: (minutes: number | null) => void;
   retention: BackupRetentionSettings;
@@ -106,6 +109,8 @@ export type BackupSchedulePanelProps = {
     unitDays?: string;
     onlineSuffix?: string;
     restoreOnStartup?: string;
+    exitSyncAlert?: string;
+    onExitNote?: string;
   };
 };
 
@@ -113,6 +118,8 @@ export function BackupSchedulePanel({
   backupOnExit,
   onBackupOnExitChange,
   backupOnExitLocked = false,
+  exitSyncAlert,
+  onExitSyncAlertChange,
   backupIntervalMinutes,
   onBackupIntervalChange,
   retention,
@@ -137,7 +144,7 @@ export function BackupSchedulePanel({
 }: BackupSchedulePanelProps) {
   const [countdown, setCountdown] = useState<string>("");
   const [intervalInput, setIntervalInput] = useState<string>(
-    backupIntervalMinutes != null ? String(backupIntervalMinutes) : "60"
+    backupIntervalMinutes != null ? String(backupIntervalMinutes) : "1"
   );
   const [retentionInput, setRetentionInput] = useState<Record<keyof BackupRetentionSettings, string>>({
     maxToday: String(retention.maxToday),
@@ -166,6 +173,7 @@ export function BackupSchedulePanel({
     onlineSuffix: labels.onlineSuffix,
     openOnDrive: labels.openOnDrive,
     restoreOnStartupLabel: labels.restoreOnStartup ?? "Obnovit při otevření aplikace",
+    exitSyncAlertLabel: labels.exitSyncAlert ?? "Při odchodu připomenout synchronizaci",
   };
 
   // nextBackupAt a nextRestoreAt jsou dnes vzdy stejna hodnota - jde o jeden sjednoceny sync
@@ -187,7 +195,7 @@ export function BackupSchedulePanel({
 
   const handleIntervalToggle = (checked: boolean) => {
     if (checked) {
-      const mins = Math.max(1, parseInt(intervalInput, 10) || 60);
+      const mins = Math.max(1, parseInt(intervalInput, 10) || 1);
       setIntervalInput(String(mins));
       onBackupIntervalChange(mins);
     } else {
@@ -260,6 +268,19 @@ export function BackupSchedulePanel({
           label={<Typography variant="body2">{l.onExit}</Typography>}
           sx={{ m: 0 }}
         />
+        {labels.onExitNote && (
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: -1, ml: 4 }}>
+            {labels.onExitNote}
+          </Typography>
+        )}
+
+        {onExitSyncAlertChange && (
+          <FormControlLabel
+            control={<Checkbox checked={exitSyncAlert ?? true} onChange={(e) => onExitSyncAlertChange(e.target.checked)} size="small" />}
+            label={<Typography variant="body2">{l.exitSyncAlertLabel}</Typography>}
+            sx={{ m: 0 }}
+          />
+        )}
 
         {onRestoreOnStartupChange && (
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
